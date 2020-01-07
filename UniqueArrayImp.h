@@ -9,7 +9,8 @@ UniqueArray<Element, Compare>::UniqueArray(unsigned int size) :
 template <class Element, class Compare>
 UniqueArray<Element, Compare>::UniqueArray(
     const UniqueArray<Element, Compare>& other ) :
-    data(new Element*[other.size]), size(other.size) {
+    data(new Element*[other.size]), size(other.size)
+{
     for (unsigned int i = 0; i < size; ++i) {
         if (other.data[i]) {
             data[i] = new Element(*other.data[i]);
@@ -24,6 +25,28 @@ UniqueArray<Element, Compare>::~UniqueArray() {
             delete data[i];
         }
     }
+}
+
+template <class Element, class Compare>
+unsigned int UniqueArray<Element, Compare>::insert(const Element& element) {
+    unsigned int first_empty_index = size;
+    Compare equal;
+    for (unsigned int i = 0; i < size; ++i) {
+        if (data[i] && equal(*data[i], element)) {
+            return i; // element already in array
+        }
+
+        if (i < first_empty_index && !data[i]) {
+            first_empty_index = i;
+        }
+    }
+
+    if (first_empty_index >= size) {
+        throw UniqueArray<Element,Compare>::UniqueArrayIsFullException();
+    }
+
+    data[first_empty_index] = new Element(element);
+    return first_empty_index;
 }
 
 #endif //MTMPARKINGLOT_UNIQUEARRAYIMP_H
