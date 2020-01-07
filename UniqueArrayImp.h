@@ -49,4 +49,31 @@ unsigned int UniqueArray<Element, Compare>::insert(const Element& element) {
     return first_empty_index;
 }
 
+template <class Element, class Compare>
+bool UniqueArray<Element, Compare>::getIndex(const Element& element,
+    unsigned int& index) const
+{
+    Compare equal;
+    for (unsigned int i = 0; i < size; ++i) {
+        if (data[i] && equal(*data[i], element)) {
+            index = i;
+            return true;
+        }
+    }
+    return false;
+}
+
+template <class Element, class Compare>
+const Element* UniqueArray<Element, Compare>::operator[](
+    const Element& element) const
+{
+    Compare equal;
+    for (unsigned int i = 0; i < size; ++i) {
+        if (data[i] && equal(*data[i], element)) {
+            return data[i];
+        }
+    }
+    return NULL;
+}
+
 #endif //MTMPARKINGLOT_UNIQUEARRAYIMP_H
