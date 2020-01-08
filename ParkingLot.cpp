@@ -54,14 +54,22 @@ ParkingLot::~ParkingLot() {
 
 ParkingResult ParkingLot::enterParking(VehicleType vehicleType, LicensePlate licensePlate, Time entranceTime) {
     if(vehicleIsIn(licensePlate)){
-        ParkingLotPrinter::printVehicle(cout, )
-        ParkingLotPrinter::printEntryFailureAlreadyParked()
+        Vehicle& vehicle=getVehicleByPlates(licensePlate);
+        ParkingLotPrinter::printVehicle(cout,vehicleType,licensePlate,entranceTime);
+        ParkingLotPrinter::printEntryFailureAlreadyParked(cout, vehicle.getSpot());
     }
+
+    Vehicle vehicle=new Vehicle(vehicleType, licensePlate, entranceTime);
+    vehicles->insert(vehicle);
+    
 }
 
 Vehicle& ParkingLot::getVehicleByPlates(ParkingLotUtils::LicensePlate license_plate) {
     for (int i=0;i<size;i++){
-        if(vehicles[i].)
+        if(vehicles[i]==license_plate){
+            return vehicles[i];
+        }
     }
+    throw //TODO
 }
 

@@ -21,8 +21,10 @@ namespace Vehicles{
         ~Vehicle();
         void addDebt(Time departure_time);
         void giveTicket();
-        Vehicle operator==(const Vehicle &vehicle) const;
-        LicensePlate getPlates();
+        bool operator==(const Vehicle &vehicle) const;
+        bool operator==(LicensePlate plate);
+        LicensePlate getPlates() const;
+        ParkingSpot& getSpot() const;
     }
 }
 #endif //MTMPARKINGLOT_VEHICLE_H

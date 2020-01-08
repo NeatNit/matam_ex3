@@ -4,10 +4,10 @@ using namespace Vehicles;
 using namespace ParkingLotUtils;
 
 Vehicle::VehicleType (Time arrival_time, VehicleType type, LicensePlate plate, const ParkingSpot spot){
-    this.arrival_time=arrival_time;
-    this.type=type;
-    this.LicensePlate=plate;
-    this.spot=spot;
+    this->arrival_time=arrival_time;
+    this->type=type;
+    this->plate=plate;
+    this->spot=spot;
     debt=0;
 }
 
@@ -32,4 +32,20 @@ int Vehicle::calculateDebt(Time departure_time, VehicleType type) const {
     throw // TODO
 
 }
+
+LicensePlate Vehicle::getPlates() {
+    return plate;
+}
+ParkingSpot& Vehicle::getSpot() const {
+    return spot;
+}
+
+bool Vehicle::operator==(ParkingLotUtils::LicensePlate plate) {
+    return this->plate==plate;
+}
+
+bool Vehicle::operator==(const Vehicle &vehicle) const {
+    return this->plate==vehicle.plate;
+}
+
 
