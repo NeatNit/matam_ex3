@@ -88,4 +88,21 @@ bool UniqueArray<Element, Compare>::remove(const Element& element) {
     return false;
 }
 
+template <class Element, class Compare>
+unsigned int UniqueArray<Element, Compare>::getCount() const {
+    // Possible optimization: keep the current count as a private member and
+    // update it on insert/remove, then just return it here to get O(1).
+    unsigned int count = 0;
+    for (unsigned int i = 0; i < size; ++i)
+    {
+        if (data[i]) ++count;
+    }
+    return count;
+}
+
+template <class Element, class Compare>
+unsigned int UniqueArray<Element, Compare>::getSize() const {
+    return size;
+}
+
 #endif //MTMPARKINGLOT_UNIQUEARRAYIMP_H
