@@ -74,4 +74,17 @@ const Element* UniqueArray<Element, Compare>::operator[](
     return NULL;
 }
 
+template <class Element, class Compare>
+bool UniqueArray<Element, Compare>::remove(const Element& element) {
+    Compare equal;
+    for (unsigned int i = 0; i < size; ++i) {
+        if (data[i] && equal(*data[i], element)) {
+            delete data[i];
+            data[i] = NULL;
+            return true;
+        }
+    }
+    return false;
+}
+
 #endif //MTMPARKINGLOT_UNIQUEARRAYIMP_H
