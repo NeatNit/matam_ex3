@@ -76,18 +76,31 @@ static void testInt() {
     assert(ua.getSize() == size);
     assert(ua.getCount() == 0);
     // Test insert
-    ua.insert(4);
-    unsigned int index = ua.insert(1);
-    ua.insert(5);
-    assert(ua.insert(1) == index);
-    ua.insert(2);
+    unsigned int index4 = ua.insert(4);
+    unsigned int index1 = ua.insert(1);
+    unsigned int index5 = ua.insert(5);
+    assert(ua.insert(1) == index1);
+    unsigned int index2 = ua.insert(2);
     assert(ua.getCount() == 4);
-    ua.insert(2);
+    assert(index2 == ua.insert(2));
+    assert(ua.getCount() == 4);
     // Test UniqueArrayIsFullException
     try {
         ua.insert(3);
     }
     catch (intUA::UniqueArrayIsFullException& e) {
+        assert(ua.getCount() == 4);
+        unsigned int index;
+        assert(!ua.getIndex(3, index));
+        assert(ua.getIndex(1, index));
+        assert(index == index1);
+        assert(ua.getIndex(2, index));
+        assert(index == index2);
+        assert(ua.getIndex(4, index));
+        assert(index == index4);
+        assert(ua.getIndex(5, index));
+        assert(index == index5);
+        std::cout << "I was here!" << std::endl;
         return;
     }
     assert(0);
