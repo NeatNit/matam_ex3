@@ -96,4 +96,21 @@ unsigned int UniqueArray<Element, Compare>::getSize() const {
     return size;
 }
 
+template <class Element, class Compare>
+UniqueArray<Element, Compare> UniqueArray<Element, Compare>::filter(
+    const Filter& f ) const
+{
+    // first copy everything
+    UniqueArray filtered_array = UniqueArray(*this);
+
+    // then delete the unwanted stuff
+    for (unsigned int i = 0; i < size; ++i)
+    {
+        if (data[i] && !f(*data[i])){
+            filtered_array.remove(*data[i]);
+        }
+    }
+    return filtered_array;
+}
+
 #endif //MTMPARKINGLOT_UNIQUEARRAYIMP_H
