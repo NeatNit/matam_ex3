@@ -13,7 +13,7 @@ namespace ParkingLotUtils {
 
     class ParkingLotPrinter {
     public:
-        
+
         /**
          * @brief Prints the Vehicle details according to the required format.
          * 

@@ -1,36 +1,18 @@
 #include "ParkingLot.h"
 #include "ParkingLotPrinter.cpp"
+#include "Vehicle.h"
 
 using namespace ParkingLotUtils;
 using namespace MtmParkingLot;
 using namespace Fees;
-Vehicle::VehicleType (Time arrival_time, VehicleType type, LicensePlate plate, const ParkingSpot spot){
-    this.arrival_time=arrival_time;
-    this.type=type;
-    this.LicensePlate=plate;
-    this.spot=spot;
-    debt=0;
-}
+using namespace Vehicles;
 
-void Vehicle::addDebt(Time departure) {
-    debt+=calculateDebt(arrival_time, type);
-}
-void Vehicle::giveTicket() {
-    debt+=FINE;
-}
-int Vehicle::calculateDebt(Time departure_time, VehicleType type) const {
-    Time duration=(departure_time-arrival_time).toHours();
-    if(type==HANDICAPPED){
-        return HANDICAP_FEE;
-    }
-    if(type==MOTORBIKE){
-        return MOTORBIKE_FEE_FIRST+(duration-HOUR)*MOTORBIKE_FEE;
-    }
-    if(type==CAR){
-        return CAR_FEE_FIRST+(duration-HOUR)*CAR_FEE;
-    }
-    throw /*TODO*/
-}
+/**
+ * @brief returns the total number of parking spots in the block sizes array
+ *
+ * @param parkingBlockSizes bloc sizes array
+ * @return int total number
+ */
 
 int numberOfSpots(unsigned int* parkingBlockSizes){
     sum=0
@@ -38,6 +20,22 @@ int numberOfSpots(unsigned int* parkingBlockSizes){
         sum+=parkingBlockSizes[i];
     }
     return sum;
+}
+void fillParkingSpotsArray(UniqueArray array, unsigned int* parkingBlockSizes){
+    int handicap_num=parkingBlockSizes[HANDICAPPED], motorbike_num=parkingBlockSizes[MOTORBIKE],
+    car_num=parkingBlockSizes[CAR];
+    unsigned int curr_spot_num=0;
+    VehicleType curr_type=FIRST;
+    for (int i=0; i<handicap_num; i++, curr_spot_num++){
+        if(curr_spot_num>motorbike_num&&curr_spot_num<=handicap_num){
+            curr_type=HANDICAPPED;
+        }
+        if(curr_spot_num>handicap_num){
+            curr_type=CAR;
+        }
+        ParkingSpot spot(curr_type, curr_spot_num);
+        array.insert(spot);
+    }
 }
 
 ParkingLot::ParkingLot(unsigned int *parkingBlockSizes) {

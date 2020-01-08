@@ -5,6 +5,7 @@
 #include "Time.h"
 #include "ParkingSpot.h"
 #include "UniqueArray.h"
+#include "Vehicle.h"
 namespace  Fees{
     const int FINE=250;
     const int HANDICAP_FEE=15;
@@ -17,9 +18,11 @@ namespace  Fees{
 namespace MtmParkingLot {
 
     using namespace ParkingLotUtils;
+    using namespace Vehicles;
     using std::ostream;
 
     int numberOfSpots(unsigned int* parkingBlockSizes);
+    void fillParkingSpotsArray(UniqueArray array, unsigned int* parkingBlockSizes);
     class ParkingLot {
     private:
         UniqueArray vehicles[];
@@ -38,23 +41,6 @@ namespace MtmParkingLot {
         bool vehicleIsIn(LicensePlate plate);
         Vehicle& getVehicleByPlates(LicensePlate license_plate);
 
-    };
-
-    class Vehicle{
-    private:
-        Time arrival_time;
-        VehicleType type;
-        LicensePlate plate;
-        int debt;
-        ParkingSpot spot;
-        int calculateDebt(Time departure, VehicleType type) const;
-    public:
-        Vehicle (Time arrival_time, VehicleType type, LicensePlate plate, const ParkingSpot spot);
-        ~Vehicle();
-        void addDebt(Time departure_time);
-        void giveTicket();
-        Vehicle operator==(const Vehicle& vehicle) const;
-        LicensePlate getPlates();
     };
 }
 
