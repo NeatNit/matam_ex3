@@ -43,6 +43,7 @@ ParkingLot::ParkingLot(unsigned int *parkingBlockSizes) {
     UniqueArray vehicles=new UniqueArray(size);
     UniqueArray free_spots=new UniqueArray(size);
     UniqueArray taken_spots=new UniqueArray(size);
+    fillParkingSpotsArray(free_spots, parkingBlockSizes);
 }
 
 ParkingLot::~ParkingLot() {
