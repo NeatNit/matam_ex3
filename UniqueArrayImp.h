@@ -3,11 +3,11 @@
 
 template <class Element, class Compare>
 UniqueArray<Element, Compare>::UniqueArray(unsigned int size) :
-    data(new Element*[size]), size(size) {}
+    data(new Element*[size]()), size(size) {}
 
 template <class Element, class Compare>
 UniqueArray<Element, Compare>::UniqueArray(const UniqueArray& other) :
-    data(new Element*[other.size]), size(other.size)
+    data(new Element*[other.size]()), size(other.size)
 {
     for (unsigned int i = 0; i < size; ++i) {
         if (other.data[i]) {
@@ -23,6 +23,7 @@ UniqueArray<Element, Compare>::~UniqueArray() {
             delete data[i];
         }
     }
+    delete[] data;
 }
 
 template <class Element, class Compare>
