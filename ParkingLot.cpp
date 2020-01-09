@@ -9,7 +9,12 @@ using namespace Vehicles;
 using std::cout;
 using std::ostream;
 
-
+class TypeFreeSpots : public <ParkingSpot>UniqueArray::Filter{
+        public:
+        virtual bool operator() (const ParkingSpot& spot) const override{
+            return spot.getParkingBlock()==type;
+        }
+};
 /**
  * @brief returns the total number of parking spots in the block sizes array
  *
@@ -47,7 +52,7 @@ void fillParkingSpotsArray(UniqueArray array, unsigned int* parkingBlockSizes){
 
 ParkingLot::ParkingLot(unsigned int *parkingBlockSizes) {
     size=numberOfSpots(parkingBlockSizes);
-    Vehicle vehicles[]=new UniqueArray(size);
+    Vehicle* vehicles[]=new Vehicle[size];
     UniqueArray<ParkingSpot> free_spots=new UniqueArray(size);
     UniqueArray<ParkingSpot> taken_spots=new UniqueArray(size);
     fillParkingSpotsArray(free_spots, parkingBlockSizes);
@@ -64,19 +69,55 @@ ParkingResult ParkingLot::enterParking(VehicleType vehicleType, LicensePlate lic
         Vehicle& vehicle=getVehicleByPlates(licensePlate);
         ParkingLotPrinter::printVehicle(cout,vehicleType,licensePlate,entranceTime);
         ParkingLotPrinter::printEntryFailureAlreadyParked(cout, vehicle.getSpot());
+        return VEHICLE_ALREADY_PARKED;
     }
-
-    Vehicle vehicle=new Vehicle(vehicleType, licensePlate, entranceTime);
+    UniqueArray filtered = this->filterFreeSpots(vehicleType);
+    if(filtered.getSize()==0){
+        ParkingLotPrinter::printVehicle(cout,vehicleType,licensePlate,entranceTime);
+        ParkingLotPrinter::printEntryFailureNoSpot(cout);
+        return NO_EMPTY_SPOT;
+    }
+    //TODO get spot from filtered, remove spot from free to taken
+    Vehicle vehicle=new Vehicle(vehicleType, licensePlate, entranceTime, );
+    changeSpotStatus(/***********************************/);
     vehicles->insert(vehicle);
+    return SUCCESS;
 
 }
 
 Vehicle& ParkingLot::getVehicleByPlates(ParkingLotUtils::LicensePlate license_plate) {
     for (int i=0;i<size;i++){
-        if(vehicles[i]==license_plate){
-            return vehicles[i];
+        if(*vehicles[i]==license_plate){
+            return *vehicles[i];
         }
     }
     throw //TODO
+}
+void ParkingLot::inspectParkingLot(ParkingLotUtils::Time inspectionTime) {
+    for(int i=1; i<size; i++){
+        vehicles[i]->giveTicket();
+    }
+}
+
+UniqueArray& ParkingLot::filterFreeSpots(ParkingLotUtils::VehicleType type) {
+    <ParkingSpot>UniqueArray filtered = free_spots.filter(TypeFreeSpots());
+    return filtered;
+}
+void ParkingLot::changeSpotStatus(ParkingLotUtils::ParkingSpot spot) {
+    if(free_spots[spot]){
+        taken_spots.insert(spot);
+        free_spots.remove(spot);
+    } else{
+        free_spots.insert(spot);
+        taken_spots.remove(spot);
+    }
+}
+ParkingResult ParkingLot::getParkingSpot(ParkingLotUtils::LicensePlate licensePlate,
+                                         ParkingLotUtils::ParkingSpot &parkingSpot) const {
+    for(int i=0; i<size; i++){
+        if(vehicles[i]->getPlates()==licensePlate){
+
+        }
+    }
 }
 

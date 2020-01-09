@@ -40,12 +40,20 @@ ParkingSpot& Vehicle::getSpot() const {
     return spot;
 }
 
-bool Vehicle::operator==(ParkingLotUtils::LicensePlate plate) {
+bool Vehicle::operator==(const ParkingLotUtils::LicensePlate plate) const {
     return this->plate==plate;
 }
 
 bool Vehicle::operator==(const Vehicle &vehicle) const {
     return this->plate==vehicle.plate;
+}
+
+void Vehicle::inspection(ParkingLotUtils::Time inspection_time) {
+    Time duration = inspection_time-arrival_time;
+    int day(24);
+    if(duration.toHours()>day){
+        this->giveTicket();
+    }
 }
 
 
