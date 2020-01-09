@@ -6,6 +6,9 @@ using namespace ParkingLotUtils;
 using namespace MtmParkingLot;
 using namespace Fees;
 using namespace Vehicles;
+using std::cout;
+using std::ostream;
+
 
 /**
  * @brief returns the total number of parking spots in the block sizes array
@@ -20,6 +23,10 @@ int numberOfSpots(unsigned int* parkingBlockSizes){
         sum+=parkingBlockSizes[i];
     }
     return sum;
+}
+
+bool ParkingLot::isFull(UniqueArray vehicles, ParkingLotUtils::VehicleType type) {
+
 }
 void fillParkingSpotsArray(UniqueArray array, unsigned int* parkingBlockSizes){
     int handicap_num=parkingBlockSizes[HANDICAPPED], motorbike_num=parkingBlockSizes[MOTORBIKE],
@@ -40,9 +47,9 @@ void fillParkingSpotsArray(UniqueArray array, unsigned int* parkingBlockSizes){
 
 ParkingLot::ParkingLot(unsigned int *parkingBlockSizes) {
     size=numberOfSpots(parkingBlockSizes);
-    UniqueArray vehicles=new UniqueArray(size);
-    UniqueArray free_spots=new UniqueArray(size);
-    UniqueArray taken_spots=new UniqueArray(size);
+    Vehicle vehicles[]=new UniqueArray(size);
+    UniqueArray<ParkingSpot> free_spots=new UniqueArray(size);
+    UniqueArray<ParkingSpot> taken_spots=new UniqueArray(size);
     fillParkingSpotsArray(free_spots, parkingBlockSizes);
 }
 
@@ -61,7 +68,7 @@ ParkingResult ParkingLot::enterParking(VehicleType vehicleType, LicensePlate lic
 
     Vehicle vehicle=new Vehicle(vehicleType, licensePlate, entranceTime);
     vehicles->insert(vehicle);
-    
+
 }
 
 Vehicle& ParkingLot::getVehicleByPlates(ParkingLotUtils::LicensePlate license_plate) {

@@ -25,10 +25,11 @@ namespace MtmParkingLot {
     void fillParkingSpotsArray(UniqueArray array, unsigned int* parkingBlockSizes);
     class ParkingLot {
     private:
-        UniqueArray vehicles[];
+        Vehicle vehicles[];
         UniqueArray free_spots[];
         UniqueArray taken_spots[];
         static int size;
+        bool isFull(UniqueArray vehicles, VehicleType type);
     public:
 
         ParkingLot(unsigned int parkingBlockSizes[]);
