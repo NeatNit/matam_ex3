@@ -59,7 +59,7 @@ ParkingLot::ParkingLot(unsigned int *parkingBlockSizes) {
 }
 
 ParkingLot::~ParkingLot() {
-    delete vehicles;
+    delete[] vehicles;
     delete free_spots;
     delete taken_spots;
 }
@@ -71,7 +71,7 @@ ParkingResult ParkingLot::enterParking(VehicleType vehicleType, LicensePlate lic
         ParkingLotPrinter::printEntryFailureAlreadyParked(cout, vehicle.getSpot());
         return VEHICLE_ALREADY_PARKED;
     }
-    UniqueArray filtered = this->filterFreeSpots(vehicleType);
+    UniqueArray filtered = filterFreeSpots(vehicleType);
     if(filtered.getSize()==0){
         ParkingLotPrinter::printVehicle(cout,vehicleType,licensePlate,entranceTime);
         ParkingLotPrinter::printEntryFailureNoSpot(cout);
@@ -80,7 +80,7 @@ ParkingResult ParkingLot::enterParking(VehicleType vehicleType, LicensePlate lic
     //TODO get spot from filtered, remove spot from free to taken
     Vehicle vehicle=new Vehicle(vehicleType, licensePlate, entranceTime, );
     changeSpotStatus(/***********************************/);
-    vehicles->insert(vehicle);
+   // vehicles->insert(vehicle);
     return SUCCESS;
 
 }
@@ -91,6 +91,7 @@ Vehicle& ParkingLot::getVehicleByPlates(ParkingLotUtils::LicensePlate license_pl
             return *vehicles[i];
         }
     }
+    return NULL;
     throw //TODO
 }
 void ParkingLot::inspectParkingLot(ParkingLotUtils::Time inspectionTime) {
@@ -114,10 +115,37 @@ void ParkingLot::changeSpotStatus(ParkingLotUtils::ParkingSpot spot) {
 }
 ParkingResult ParkingLot::getParkingSpot(ParkingLotUtils::LicensePlate licensePlate,
                                          ParkingLotUtils::ParkingSpot &parkingSpot) const {
+    Vehicle& curr_vehicle = getVehicleByPlates(licensePlate);
+    if(!curr_vehicle){
+        return VEHICLE_NOT_FOUND
+    }
+    parkingSpot = curr_vehicle.getSpot();
+    return SUCCESS;
+    /*
     for(int i=0; i<size; i++){
-        if(vehicles[i]->getPlates()==licensePlate){
-
+        if(*vehicles[i]==licensePlate){
+            parkingSpot=vehicles[i]->getSpot();
+            return SUCCESS;
         }
     }
+    return VEHICLE_NOT_FOUND;
+     */
 }
 
+ParkingResult ParkingLot::exitParking(ParkingLotUtils::LicensePlate licensePlate, ParkingLotUtils::Time exitTime) {
+    if(!vehicleIsIn(licensePlate)){
+        ParkingLotPrinter::printExitFailure(cout, licensePlate);
+        return VEHICLE_NOT_FOUND;
+    }
+
+    Vehicle& exiting_vehicle = getVehicleByPlates(licensePlate);
+
+    ParkingLotPrinter::printVehicle(cout, exiting_vehicle.getType(), licensePlate, exiting_vehicle.getTime());
+    ParkingLotPrinter::printExitSuccess(cout, exitTime, exiting_vehicle.getDebt());
+
+}
+
+ostream & ParkingLot::operator<<(ostream &os, const MtmParkingLot::ParkingLot &parkingLot) {
+    ParkingLotPrinter::printParkingLotTitle(cout);
+
+}
