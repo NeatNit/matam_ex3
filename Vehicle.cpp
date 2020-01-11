@@ -19,14 +19,15 @@ void Vehicle::giveTicket() {
 }
 int Vehicle::calculateDebt(Time departure_time, VehicleType type) const {
     Time duration=(departure_time-arrival_time).toHours();
+    Time hour(1, 0, 0);
     if(type==HANDICAPPED){
         return HANDICAP_FEE;
     }
     if(type==MOTORBIKE){
-        return MOTORBIKE_FEE_FIRST+(duration-HOUR)*MOTORBIKE_FEE;
+        return MOTORBIKE_FEE_FIRST+(duration-hour)*MOTORBIKE_FEE;
     }
     if(type==CAR){
-        return CAR_FEE_FIRST+(duration-HOUR)*CAR_FEE;
+        return CAR_FEE_FIRST+(duration-hour)*CAR_FEE;
     }
 
     throw // TODO
@@ -54,6 +55,17 @@ void Vehicle::inspection(ParkingLotUtils::Time inspection_time) {
     if(duration.toHours()>day){
         this->giveTicket();
     }
+}
+ParkingSpot& Vehicle::getType() const {
+    return type;
+}
+
+int Vehicle::getDebt() {
+    return debt;
+}
+
+Time Vehicle::getTime() {
+    return arrival_time;
 }
 
 

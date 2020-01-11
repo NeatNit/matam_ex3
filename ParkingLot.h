@@ -13,7 +13,6 @@ namespace  Fees{
     const int MOTORBIKE_FEE=5;
     const int CAR_FEE_FIRST=20;
     const int CAR_FEE=10;
-    const int HOUR=1;
 }
 namespace MtmParkingLot {
 

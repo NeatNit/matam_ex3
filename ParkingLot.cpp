@@ -82,7 +82,6 @@ ParkingResult ParkingLot::enterParking(VehicleType vehicleType, LicensePlate lic
     changeSpotStatus(/***********************************/);
    // vehicles->insert(vehicle);
     return SUCCESS;
-
 }
 
 Vehicle& ParkingLot::getVehicleByPlates(ParkingLotUtils::LicensePlate license_plate) {
