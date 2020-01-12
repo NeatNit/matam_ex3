@@ -21,7 +21,7 @@ namespace MtmParkingLot {
     using std::ostream;
 
     int numberOfSpots(unsigned int* parkingBlockSizes);
-    void fillParkingSpotsArray(UniqueArray array, unsigned int* parkingBlockSizes);
+    void fillParkingSpotsArray(UniqueArray array, unsigned int* parkingBlockSizes) const;
     void swap(Vehicle** right, Vehicle** left);
     class ParkingLot {
     private:
@@ -29,9 +29,11 @@ namespace MtmParkingLot {
         UniqueArray free_spots;
         UniqueArray taken_spots;
         static int size;
-        bool filterFreeSpots(VehicleType type);
+        bool filterFreeSpots(VehicleType type) const;
         void changeSpotStatus(ParkingSpot spot);
-        Vehicle** sortVehicles();
+        Vehicle** sortVehicles() const;
+        bool vehicleIsIn(LicensePlate plate) const;
+        Vehicle& getVehicleByPlates(LicensePlate license_plate) const;
     public:
 
         ParkingLot(unsigned int parkingBlockSizes[]);
@@ -41,8 +43,8 @@ namespace MtmParkingLot {
         ParkingResult getParkingSpot(LicensePlate licensePlate, ParkingSpot& parkingSpot) const;
         void inspectParkingLot(Time inspectionTime);
         friend ostream& operator<<(ostream& os, const ParkingLot& parkingLot);
-        bool vehicleIsIn(LicensePlate plate);
-        Vehicle& getVehicleByPlates(LicensePlate license_plate);
+        bool vehicleIsIn(LicensePlate plate) const;
+        Vehicle& getVehicleByPlates(LicensePlate license_plate) const;
 
     };
 }
