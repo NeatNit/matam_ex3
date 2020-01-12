@@ -15,6 +15,7 @@ public:
     bool remove(const Element& element);
     unsigned int getCount() const;
     unsigned int getSize() const;
+    const Element* getElement(unsigned int index);
 
     class Filter {
     public:

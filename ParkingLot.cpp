@@ -77,10 +77,10 @@ ParkingResult ParkingLot::enterParking(VehicleType vehicleType, LicensePlate lic
         ParkingLotPrinter::printEntryFailureNoSpot(cout);
         return NO_EMPTY_SPOT;
     }
-    //TODO get spot from filtered, remove spot from free to taken
-    Vehicle vehicle=new Vehicle(vehicleType, licensePlate, entranceTime, );
-    changeSpotStatus(/***********************************/);
-   // vehicles->insert(vehicle);
+    Vehicle vehicle=new Vehicle(vehicleType, licensePlate, entranceTime, &filtered.getElement(0));
+    changeSpotStatus(filtered.getElement(0));
+    vehicles.insert(vehicle);
+    delete filtered;
     return SUCCESS;
 }
 
@@ -120,15 +120,6 @@ ParkingResult ParkingLot::getParkingSpot(ParkingLotUtils::LicensePlate licensePl
     }
     parkingSpot = curr_vehicle.getSpot();
     return SUCCESS;
-    /*
-    for(int i=0; i<size; i++){
-        if(*vehicles[i]==licensePlate){
-            parkingSpot=vehicles[i]->getSpot();
-            return SUCCESS;
-        }
-    }
-    return VEHICLE_NOT_FOUND;
-     */
 }
 
 ParkingResult ParkingLot::exitParking(ParkingLotUtils::LicensePlate licensePlate, ParkingLotUtils::Time exitTime) {
@@ -136,15 +127,32 @@ ParkingResult ParkingLot::exitParking(ParkingLotUtils::LicensePlate licensePlate
         ParkingLotPrinter::printExitFailure(cout, licensePlate);
         return VEHICLE_NOT_FOUND;
     }
-
     Vehicle& exiting_vehicle = getVehicleByPlates(licensePlate);
-
+    ParkingSpot freed_spot;
+    getParkingSpot(licensePlate, freed_spot);
+    changeSpotStatus(freed_spot);
+    vehicles.remove(exiting_vehicle);
     ParkingLotPrinter::printVehicle(cout, exiting_vehicle.getType(), licensePlate, exiting_vehicle.getTime());
     ParkingLotPrinter::printExitSuccess(cout, exitTime, exiting_vehicle.getDebt());
-
+    return SUCCESS;
 }
 
 ostream & ParkingLot::operator<<(ostream &os, const MtmParkingLot::ParkingLot &parkingLot) {
     ParkingLotPrinter::printParkingLotTitle(cout);
 
+}
+
+Vehicle** ParkingLot::sortVehicles() {
+    Vehicle** sorted_vehicles = new Vehicle*[size];
+    for (int i=0; i<size; i++){
+        for (int j=0; j<size-i; j++){
+            
+        }
+    }
+}
+
+void swap(Vehicle** right, Vehicle** left){
+    Vehicle* temp = &right;
+    &right = &left;
+    &left = temp;
 }

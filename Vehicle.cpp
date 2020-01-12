@@ -9,6 +9,7 @@ Vehicle::VehicleType (Time arrival_time, VehicleType type, LicensePlate plate, c
     this->plate=plate;
     this->spot=spot;
     debt=0;
+    fined = false;
 }
 
 void Vehicle::addDebt(Time departure) {
@@ -52,8 +53,9 @@ bool Vehicle::operator==(const Vehicle &vehicle) const {
 void Vehicle::inspection(ParkingLotUtils::Time inspection_time) {
     Time duration = inspection_time-arrival_time;
     int day(24);
-    if(duration.toHours()>day){
+    if(duration.toHours()>day&&!fined){
         this->giveTicket();
+        fined = true;
     }
 }
 ParkingSpot& Vehicle::getType() const {

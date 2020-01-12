@@ -14,6 +14,7 @@ namespace Vehicles{
         VehicleType type;
         LicensePlate plate;
         int debt;
+        bool fined;
         ParkingSpot spot;
         int calculateDebt(Time departure, VehicleType type) const;
     public:

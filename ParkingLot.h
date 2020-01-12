@@ -22,6 +22,7 @@ namespace MtmParkingLot {
 
     int numberOfSpots(unsigned int* parkingBlockSizes);
     void fillParkingSpotsArray(UniqueArray array, unsigned int* parkingBlockSizes);
+    void swap(Vehicle** right, Vehicle** left);
     class ParkingLot {
     private:
         Vehicle *vehicles[];
@@ -29,7 +30,8 @@ namespace MtmParkingLot {
         UniqueArray taken_spots;
         static int size;
         bool filterFreeSpots(VehicleType type);
-        void changeSpotStatus(ParkingSpot spot)
+        void changeSpotStatus(ParkingSpot spot);
+        Vehicle** sortVehicles();
     public:
 
         ParkingLot(unsigned int parkingBlockSizes[]);
