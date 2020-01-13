@@ -7,8 +7,7 @@ UniqueArray<Element, Compare>::UniqueArray(unsigned int size) :
 
 template <class Element, class Compare>
 UniqueArray<Element, Compare>::UniqueArray(const UniqueArray& other) :
-    data(new Element*[other.size]()), size(other.size)
-{
+    data(new Element*[other.size]()), size(other.size) {
     for (unsigned int i = 0; i < size; ++i) {
         if (other.data[i]) {
             data[i] = new Element(*other.data[i]);
@@ -45,8 +44,7 @@ unsigned int UniqueArray<Element, Compare>::insert(const Element& element) {
 
 template <class Element, class Compare>
 bool UniqueArray<Element, Compare>::getIndex(const Element& element,
-    unsigned int& index) const
-{
+    unsigned int& index) const {
     Compare equal;
     for (unsigned int i = 0; i < size; ++i) {
         if (data[i] && equal(*data[i], element)) {
@@ -59,8 +57,7 @@ bool UniqueArray<Element, Compare>::getIndex(const Element& element,
 
 template <class Element, class Compare>
 const Element* UniqueArray<Element, Compare>::operator[](
-    const Element& element) const
-{
+    const Element& element) const {
     unsigned int index;
     if (getIndex(element, index)) {
         return data[index];
@@ -98,8 +95,7 @@ unsigned int UniqueArray<Element, Compare>::getSize() const {
 
 template <class Element, class Compare>
 UniqueArray<Element, Compare> UniqueArray<Element, Compare>::filter(
-    const Filter& f ) const
-{
+    const Filter& f ) const {
     // first copy everything
     UniqueArray filtered_array = UniqueArray(*this);
 
