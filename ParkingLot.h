@@ -6,6 +6,8 @@
 #include "ParkingSpot.h"
 #include "UniqueArray.h"
 #include "Vehicle.h"
+#include <map>
+#include <iostream>
 namespace  Fees{
     const int FINE=250;
     const int HANDICAP_FEE=15;
@@ -19,21 +21,20 @@ namespace MtmParkingLot {
     using namespace ParkingLotUtils;
     using namespace Vehicles;
     using std::ostream;
+    using std::cout;
+    using std::map;
 
     int numberOfSpots(unsigned int* parkingBlockSizes);
-    void fillParkingSpotsArray(UniqueArray array, unsigned int* parkingBlockSizes) const;
-    void swap(Vehicle** right, Vehicle** left);
     class ParkingLot {
     private:
-        Vehicle *vehicles[];
-        UniqueArray free_spots;
-        UniqueArray taken_spots;
-        static int size;
-        bool filterFreeSpots(VehicleType type) const;
-        void changeSpotStatus(ParkingSpot spot);
-        Vehicle** sortVehicles() const;
-        bool vehicleIsIn(LicensePlate plate) const;
-        Vehicle& getVehicleByPlates(LicensePlate license_plate) const;
+        UniqueArray<LicensePlate> motorbikes;
+        UniqueArray<LicensePlate> handicaps;
+        UniqueArray<LicensePlate> cars;
+        map<LicensePlate, Vehicle> plates_to_vehicles;
+        map<int, Vehicle> spots_to_vehicles;
+        unsigned int size;
+        UniqueArray<LicensePlate>& uniqueArrayByType(VehicleType type) const;
+        ParkingSpot findSpot(VehicleType type, int index);
     public:
 
         ParkingLot(unsigned int parkingBlockSizes[]);
@@ -43,8 +44,10 @@ namespace MtmParkingLot {
         ParkingResult getParkingSpot(LicensePlate licensePlate, ParkingSpot& parkingSpot) const;
         void inspectParkingLot(Time inspectionTime);
         friend ostream& operator<<(ostream& os, const ParkingLot& parkingLot);
-        bool vehicleIsIn(LicensePlate plate) const;
-        Vehicle& getVehicleByPlates(LicensePlate license_plate) const;
+
+
+        //bool vehicleIsIn(LicensePlate plate) const;
+        //Vehicle& getVehicleByPlates(LicensePlate license_plate) const;
 
     };
 }

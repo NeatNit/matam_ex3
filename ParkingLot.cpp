@@ -1,6 +1,7 @@
 #include "ParkingLot.h"
 #include "ParkingLotPrinter.cpp"
 #include "Vehicle.h"
+#include <map>
 
 using namespace ParkingLotUtils;
 using namespace MtmParkingLot;
@@ -30,91 +31,54 @@ int numberOfSpots(unsigned int* parkingBlockSizes){
     return sum;
 }
 
-bool ParkingLot::isFull(UniqueArray vehicles, ParkingLotUtils::VehicleType type) {
-
-}
-void fillParkingSpotsArray(UniqueArray array, unsigned int* parkingBlockSizes) const{
-    int handicap_num=parkingBlockSizes[HANDICAPPED], motorbike_num=parkingBlockSizes[MOTORBIKE],
-    car_num=parkingBlockSizes[CAR];
-    unsigned int curr_spot_num=0;
-    VehicleType curr_type=FIRST;
-    for (int i=0; i<handicap_num; i++, curr_spot_num++){
-        if(curr_spot_num>motorbike_num&&curr_spot_num<=handicap_num){
-            curr_type=HANDICAPPED;
-        }
-        if(curr_spot_num>handicap_num){
-            curr_type=CAR;
-        }
-        ParkingSpot spot(curr_type, curr_spot_num);
-        array.insert(spot);
-    }
-}
-
-ParkingLot::ParkingLot(unsigned int *parkingBlockSizes) {
-    size=numberOfSpots(parkingBlockSizes);
-    Vehicle* vehicles[]=new Vehicle[size];
-    UniqueArray<ParkingSpot> free_spots=new UniqueArray(size);
-    UniqueArray<ParkingSpot> taken_spots=new UniqueArray(size);
-    fillParkingSpotsArray(free_spots, parkingBlockSizes);
+ParkingLot::ParkingLot(unsigned int *parkingBlockSizes):
+motorbikes(new UniqueArray<LicensePlate>(parkingBlockSizes[MOTORBIKE])),
+handicaps(new UniqueArray<LicensePlate>(parkingBlockSizes[HANDICAPPED])),
+cars(new UniqueArray<LicensePlate>(parkingBlockSizes[CAR])),
+plates_to_vehicles(new map<LicensePlate, Vehicle>),
+spots_to_vehicles(new map<int, Vehicle>){
+    size = numberOfSpots(parkingBlockSizes);
 }
 
 ParkingLot::~ParkingLot() {
-    delete[] vehicles;
-    delete free_spots;
-    delete taken_spots;
+    delete motorbikes;
+    delete handicaps;
+    delete cars;
+    delete plates_to_vehicles;
+    delete spots_to_vehicles;
 }
 
 ParkingResult ParkingLot::enterParking(VehicleType vehicleType, LicensePlate licensePlate, Time entranceTime) {
-    if(vehicleIsIn(licensePlate)){
-        Vehicle& vehicle=getVehicleByPlates(licensePlate);
-        ParkingLotPrinter::printVehicle(cout,vehicleType,licensePlate,entranceTime);
-        ParkingLotPrinter::printEntryFailureAlreadyParked(cout, vehicle.getSpot());
+    UniqueArray<LicensePlate> current_type = uniqueArrayByType(vehicleType);
+    if(!current_type[licensePlate]){
+        ParkingLotPrinter::printVehicle(cout, vehicleType, licensePlate, entranceTime);
+        ParkingSpot curr_spot = plates_to_vehicles[licensePlate].getSpot;
+        ParkingLotPrinter::printEntryFailureAlreadyParked(cout, curr_spot);
         return VEHICLE_ALREADY_PARKED;
     }
-    UniqueArray filtered = filterFreeSpots(vehicleType);
-    if(filtered.getCount()==0){
-        ParkingLotPrinter::printVehicle(cout,vehicleType,licensePlate,entranceTime);
+    if(current_type.getCount() == current_type.getSize()){
+        ParkingLotPrinter::printVehicle(cout, vehicleType, licensePlate, entranceTime);
         ParkingLotPrinter::printEntryFailureNoSpot(cout);
         return NO_EMPTY_SPOT;
     }
-    Vehicle vehicle=new Vehicle(vehicleType, licensePlate, entranceTime, &filtered.getElement(0));
-    changeSpotStatus(filtered.getElement(0));
-    vehicles.insert(vehicle);
-    delete filtered;
+    current_type.insert(LicensePlate);
+    int index = current_type.getIndex(LicensePlate, index);
+    ParkingSpot new_spot = findSpot(vehicleType, current_type);
+    Vehicle vehicle = new Vehicle(vehicleType, licensePlate, entranceTime, new_spot);
+    plates_to_vehicles[LicensePlate] = vehicle;
+    spots_to_vehicles[new_spot.getParkingNumber()] = vehicle;
     return SUCCESS;
 }
-
-Vehicle& ParkingLot::getVehicleByPlates(ParkingLotUtils::LicensePlate license_plate) const {
-    for (int i=0;i<size;i++){
-        if(*vehicles[i]==license_plate){
-            return *vehicles[i];
-        }
-    }
-    return NULL;
-    throw //TODO
-}
 void ParkingLot::inspectParkingLot(ParkingLotUtils::Time inspectionTime) {
-    for(int i=1; i<size; i++){
-        vehicles[i]->giveTicket();
+    map<int, Vehicle>::iterator it;
+    for ( it = spots_to_vehicles.begin(); it != spots_to_vehicles.end(); it++ ){
+        it->second.inspection(inspectionTime);
     }
 }
 
-UniqueArray& ParkingLot::filterFreeSpots(ParkingLotUtils::VehicleType type) const{
-    <ParkingSpot>UniqueArray filtered = free_spots.filter(TypeFreeSpots());
-    return filtered;
-}
-void ParkingLot::changeSpotStatus(ParkingLotUtils::ParkingSpot spot) {
-    if(free_spots[spot]){
-        taken_spots.insert(spot);
-        free_spots.remove(spot);
-    } else{
-        free_spots.insert(spot);
-        taken_spots.remove(spot);
-    }
-}
 ParkingResult ParkingLot::getParkingSpot(ParkingLotUtils::LicensePlate licensePlate,
                                          ParkingLotUtils::ParkingSpot &parkingSpot) const {
-    Vehicle& curr_vehicle = getVehicleByPlates(licensePlate);
+    Vehicle& curr_vehicle = plates_to_vehicles[licensePlate];
     if(!curr_vehicle){
         return VEHICLE_NOT_FOUND
     }
@@ -123,59 +87,47 @@ ParkingResult ParkingLot::getParkingSpot(ParkingLotUtils::LicensePlate licensePl
 }
 
 ParkingResult ParkingLot::exitParking(ParkingLotUtils::LicensePlate licensePlate, ParkingLotUtils::Time exitTime) {
-    if(!vehicleIsIn(licensePlate)){
+    if(!(motorbikes[licensePlate] || handicaps[licensePlate] || cars[licensePlate])){
         ParkingLotPrinter::printExitFailure(cout, licensePlate);
         return VEHICLE_NOT_FOUND;
     }
-    Vehicle& exiting_vehicle = getVehicleByPlates(licensePlate);
-    ParkingSpot freed_spot;
-    getParkingSpot(licensePlate, freed_spot);
-    changeSpotStatus(freed_spot);
-    vehicles.remove(exiting_vehicle);
+    Vehicle& exiting_vehicle = plates_to_vehicles[licensePlate];
+    UniqueArray<LicensePlate> current_type = uniqueArrayByType(exiting_vehicle.getType());
+    current_type.remove(LicensePlate);
+    plates_to_vehicles.erase(LicensePlate);
+    spots_to_vehicles.erase(exiting_vehicle.getSpot().getParkingNumber());
     ParkingLotPrinter::printVehicle(cout, exiting_vehicle.getType(), licensePlate, exiting_vehicle.getTime());
     ParkingLotPrinter::printExitSuccess(cout, exitTime, exiting_vehicle.getDebt());
+    delete exiting_vehicle;
     return SUCCESS;
 }
 
 ostream & ParkingLot::operator<<(ostream &os, const MtmParkingLot::ParkingLot &parkingLot) {
     ParkingLotPrinter::printParkingLotTitle(cout);
-    Vehicle** sorted_vehicles = sortVehicles();
-    int cars_num = vehicles.getCount();
-    for (int i=0; i<size; i++){
-        LicensePlate plates = sorted_vehicles[i]->getPlates();
-        VehicleType type = sorted_vehicles[i]->getType();
-        Time entrance_time = sorted_vehicles[i]->getTime();
-        ParkingSpot& spot = sorted_vehicles[i]->getSpot();
-        ParkingLotPrinter::printVehicle(os, plates, type, entrance_time);
+    map<int, Vehicle>::iterator it;
+    for ( it = spots_to_vehicles.begin(); it != spots_to_vehicles.end(); it++ ){
+        Vehicle vehicle = it->second;
+        ParkingLotPrinter::printVehicle(os, vehicle.getPlates(), vehicle.getType(), vehicle.getTime());
         ParkingLotPrinter::printParkingSpot(os, spot);
     }
-    delete[] sorted_vehicles;
     return os;
 }
 
-Vehicle** ParkingLot::sortVehicles() const{
-    Vehicle** sorted_vehicles = new Vehicle*[size];
-    int cars_num = vehicles.getCount();
-    for (int i=0; i<cars_num; i++){
-        sorted_vehicles[i] = &vehicles.getElement(i);
+UniqueArray<LicensePlate> & ParkingLot::uniqueArrayByType(ParkingLotUtils::VehicleType type) const {
+    switch (type){
+        case (MOTORBIKE):
+            return motorbikes;
+        case (HANDICAPPED):
+            return handicaps;
+        case (CAR):
+            return cars;
     }
-    for (int i=0; i<size; i++){
-        for (int j=0; j<size-i-1; j++){
-            if(sorted_vehicles[j]->getSpot().getParkingNumber() > sorted_vehicles[j+1]->getSpot().getParkingNumber()){
-                swap(sorted_vehicles+j, sorted_vehicles+j+1);
-            }
-
-        }
-    }
-    return sorted_vehicles;
 }
 
-void swap(Vehicle** right, Vehicle** left){
-    Vehicle* temp = *right;
-    *right = *left;
-    *left = temp;
-}
+ParkingSpot ParkingLot::findSpot(ParkingLotUtils::VehicleType type, int index) {
+    int factor = int(type);
+    factor *= size;
+    ParkingSpot spot = new ParkingSpot(type, index+factor);
+    return spot;
 
-bool ParkingLot::vehicleIsIn(ParkingLotUtils::LicensePlate plate) const {
-    Vehicle dummy = new Vehicle()
 }
