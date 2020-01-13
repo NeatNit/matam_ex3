@@ -1,9 +1,8 @@
 #include "ParkingLot.h"
+#include "ParkingLotTypes.h"
 
 namespace MtmParkingLot {
-    ParkingLot::ParkingLot(unsigned int parkingBlockSizes[]) {
-
-    }
+    ParkingLot::ParkingLot(unsigned int parkingBlockSizes[]) {}
 
     ParkingResult ParkingLot::getParkingSpot(LicensePlate licensePlate,
         ParkingSpot& parkingSpot) const {

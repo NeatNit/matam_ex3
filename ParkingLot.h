@@ -4,6 +4,7 @@
 #include "ParkingLotTypes.h"
 #include "Time.h"
 #include "ParkingSpot.h"
+#include "UniqueArray.h"
 
 class Vehicle {
 public:
@@ -19,9 +20,8 @@ namespace MtmParkingLot {
     using std::ostream;
 
     class ParkingLot {
-        UniqueArray<LicensePlate> Motorbikes;
-        UniqueArray<LicensePlate> Handicaps;
-        UniqueArray<LicensePlate> Cars;
+        UniqueArray<LicensePlate>[VehicleType::LAST-VehicleType::FIRST+1]
+            ParkingBlocks;
         std::map<LicensePlate, Vehicle> AllVehicles;
     public:
 
