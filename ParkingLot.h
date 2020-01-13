@@ -1,11 +1,14 @@
 #ifndef MTMPARKINGLOT_PARKINGLOT_H
 #define MTMPARKINGLOT_PARKINGLOT_H
 
+#include <map>
+
 #include "ParkingLotTypes.h"
 #include "Time.h"
 #include "ParkingSpot.h"
 #include "UniqueArray.h"
 
+/*
 class Vehicle {
 public:
     LicensePlate licensePlate;
@@ -13,6 +16,7 @@ public:
     unsigned int parkingSpot;
     Time entranceTime;
 }
+*/
 
 namespace MtmParkingLot {
 
@@ -20,8 +24,8 @@ namespace MtmParkingLot {
     using std::ostream;
 
     class ParkingLot {
-        UniqueArray<LicensePlate>[VehicleType::LAST-VehicleType::FIRST+1]
-            ParkingBlocks;
+        UniqueArray<LicensePlate>
+            *ParkingBlocks[VehicleType::LAST-VehicleType::FIRST+1];
         std::map<LicensePlate, Vehicle> AllVehicles;
     public:
 

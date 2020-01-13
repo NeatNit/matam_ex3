@@ -2,33 +2,19 @@
 #include "ParkingLotTypes.h"
 
 namespace MtmParkingLot {
-    ParkingLot::ParkingLot(unsigned int parkingBlockSizes[]) {}
+    using std::cout;
 
-    ParkingResult ParkingLot::getParkingSpot(LicensePlate licensePlate,
-        ParkingSpot& parkingSpot) const {
-        if (!AllVehicles.count(licensePlate)) {
-            // car is not in the parking lot
-            return "some kind of error";
+    ParkingLot::ParkingLot(unsigned int parkingBlockSizes[]) {
+        for (int i = VehicleType::FIRST; i <= VehicleType::LAST; ++i) {
+            ParkingBlocks[i] =
+            new UniqueArray<LicensePlate>(parkingBlockSizes[i]);
         }
-        Vehicle vehicle = AllVehicles[licensePlate];
+    }
 
-        parkingSpot = ParkingSpot(vehicle.type, vehicle.parkingSpot);
-        return SUCCESS;
-
-        /*
-        // select according to type
-        UniqueArray<LicensePlate> parking_block& = Motorbikes;
-        if (type == CAR) {
-            parking_block = Cars;
-        } else if (type == HANDICAPPED) {
-            parking_block = Handicaps;
+    ParkingLot::~ParkingLot() {
+        for (int i = VehicleType::FIRST; i <= VehicleType::LAST; ++i) {
+            delete ParkingBlocks[i];
         }
-
-        unsigned int parking_number = parking_block.getIndex(licensePlate);
-
-        parkingSpot = ParkingSpot(type, parking_number);
-        return SUCCESS;
-        */
     }
 
     ParkingResult ParkingLot::enterParking(VehicleType vehicleType,
