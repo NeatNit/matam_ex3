@@ -2,6 +2,7 @@
 
 using namespace Vehicles;
 using namespace ParkingLotUtils;
+using namespace Fees;
 
 Vehicle::VehicleType (Time arrival_time, VehicleType type, LicensePlate plate, const ParkingSpot spot){
     this->arrival_time=arrival_time;
