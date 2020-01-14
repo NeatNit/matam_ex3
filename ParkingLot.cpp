@@ -76,4 +76,14 @@ namespace MtmParkingLot {
         AllVehicles.erase(licensePlate);
         return ParkingResult::SUCCESS;
     }
+
+    ParkingResult ParkingLot::getParkingSpot(LicensePlate licensePlate,
+        ParkingSpot& parkingSpot) const {
+        if (!AllVehicles.count(licensePlate)) {
+            return ParkingResult::VEHICLE_NOT_FOUND;
+        }
+        const ParkedVehicle& vehicle = AllVehicles.find(licensePlate)->second;
+        parkingSpot = vehicle.getParkingSpot();
+        return ParkingResult::SUCCESS;
+    }
 }
