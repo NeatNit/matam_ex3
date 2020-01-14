@@ -3,8 +3,9 @@
 
 template <class Element, class Compare = std::equal_to<Element>>
 class UniqueArray {
+    Element** data;
+    unsigned int size;
 public:
-
     UniqueArray(unsigned int size);
     UniqueArray(const UniqueArray& other);
     ~UniqueArray();
@@ -24,7 +25,7 @@ public:
     UniqueArray filter(const Filter& f) const;
 
     class UniqueArrayIsFullException{};
-    
+
 };
 
 #include "UniqueArrayImp.h"
