@@ -132,17 +132,5 @@ namespace MtmParkingLot {
 
         ParkingLotPrinter::printInspectionResult(cout, inspectionTime,
             fine_count);
-
-#ifndef NDEBUG
-        // make sure that it actually modified the stored vehicles
-        unsigned int total_fines;
-        for(auto & pair : allVehicles) {
-            ParkedVehicle& vehicle = pair.second;
-            if (vehicle.getHasReceivedFine()){
-                ++total_fines;
-            }
-        }
-        assert(total_fines >= fine_count);
-#endif
     }
 }
