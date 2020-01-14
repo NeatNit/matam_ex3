@@ -16,6 +16,7 @@ class TypeFreeSpots : public <ParkingSpot>UniqueArray::Filter{
             return spot.getParkingBlock()==type;
         }
 };
+
 /**
  * @brief returns the total number of parking spots in the block sizes array
  *
@@ -96,6 +97,7 @@ ParkingResult ParkingLot::exitParking(ParkingLotUtils::LicensePlate licensePlate
     current_type.remove(LicensePlate);
     plates_to_vehicles.erase(LicensePlate);
     spots_to_vehicles.erase(exiting_vehicle.getSpot().getParkingNumber());
+    exiting_vehicle.addDebt(exitTime);
     ParkingLotPrinter::printVehicle(cout, exiting_vehicle.getType(), licensePlate, exiting_vehicle.getTime());
     ParkingLotPrinter::printExitSuccess(cout, exitTime, exiting_vehicle.getDebt());
     delete exiting_vehicle;

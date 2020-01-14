@@ -16,20 +16,18 @@ namespace Vehicles{
         int debt;
         bool fined;
         ParkingSpot spot;
-        int calculateDebt(Time departure, VehicleType type) const;
+        int calculateDebt(Time departure) const;
+        void giveTicket();
     public:
         Vehicle(Time arrival_time, VehicleType type, LicensePlate plate, const ParkingSpot spot);
         Vehicle();
         void addDebt(const Time departure_time);
-        void giveTicket();
-        bool operator==(const Vehicle &vehicle) const;
-        bool operator==(const LicensePlate plate) const;
         LicensePlate getPlates() const;
         ParkingSpot& getSpot() const;
         void inspection(Time inspection_time);
-        int getDebt();
-        Time getTime();
-        VehicleType getType();
+        int getDebt() const;
+        Time getTime() const;
+        VehicleType getType() const;
     }
 }
 #endif //MTMPARKINGLOT_VEHICLE_H
