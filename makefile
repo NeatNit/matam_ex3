@@ -21,4 +21,4 @@ ParkingSpot.o: ParkingSpot.cpp ParkingSpot.h ParkingLotTypes.h
 Time.o: Time.cpp Time.h
 
 clean:
-	rm -f $(OBJS)
+	rm -f $(EXEC) $(OBJS)

@@ -56,9 +56,11 @@ namespace ParkingLotUtils {
         case VehicleType::MOTORBIKE:
             first_hour_cost = motorbike_first_hour_cost;
             hourly_cost = motorbike_hourly_cost;
+            break;
         case VehicleType::CAR:
             first_hour_cost = car_first_hour_cost;
             hourly_cost = car_hourly_cost;
+            break;
         }
 
         Time::Hour parked_hours = (exitTime - entranceTime).toHours();

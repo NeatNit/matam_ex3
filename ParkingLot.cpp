@@ -62,6 +62,9 @@ namespace MtmParkingLot {
             std::forward_as_tuple(licensePlate, vehicleType, spot,
                 entranceTime));
 
+        ParkingLotPrinter::printVehicle(cout, vehicleType, licensePlate,
+            entranceTime);
+        ParkingLotPrinter::printEntrySuccess(cout, spot);
         return SUCCESS;
     }
 
@@ -120,6 +123,9 @@ namespace MtmParkingLot {
                 ++fine_count;
             }
         }
+
+        ParkingLotPrinter::printInspectionResult(cout, inspectionTime,
+            fine_count);
 
 #ifndef NDEBUG
         // make sure that it actually modified the stored vehicles
