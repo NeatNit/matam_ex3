@@ -22,7 +22,7 @@ Time.o: Time.cpp Time.h
 
 matam_ex3.zip: UniqueArray.h UniqueArrayImp.h ParkingLot.h ParkingLot.cpp \
  makefile dry.pdf ParkedVehicle.h ParkedVehicle.cpp
-	zip -v $@ $^
+	zip $@ $?
 
 clean:
 	rm -f $(EXEC) $(OBJS) matam_ex3.zip
