@@ -50,6 +50,9 @@ namespace ParkingLotUtils {
 
         unsigned int hourly_cost, first_hour_cost;
 
+        Time::Hour parked_hours = (exitTime - entranceTime).toHours();
+        if (parked_hours == 0) return 0;
+
         switch(vehicleType) {
         case VehicleType::HANDICAPPED:
             return handicapped_cost + (receivedFine ? fine_cost : 0);
@@ -63,7 +66,6 @@ namespace ParkingLotUtils {
             break;
         }
 
-        Time::Hour parked_hours = (exitTime - entranceTime).toHours();
         if (parked_hours > max_hours) {
             parked_hours = max_hours;
         }
