@@ -2,6 +2,8 @@
 #define MTMPARKINGLOT_PARKEDVEHICLE_H
 
 #include "ParkingLotTypes.h"
+#include "ParkingSpot.h"
+#include "Time.h"
 
 namespace ParkingLotUtils {
     class ParkedVehicle {
@@ -19,6 +21,7 @@ namespace ParkingLotUtils {
         ParkingSpot getParkingSpot() const;
         Time getEntranceTime() const;
         bool getHasReceivedFine() const;
+        unsigned int getPrice(Time exitTime) const;
         void giveFine(bool fine);
         friend ostream& operator<<(ostream& os, const ParkedVehicle& vehicle);
     };

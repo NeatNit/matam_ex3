@@ -7,6 +7,7 @@
 
 namespace MtmParkingLot {
     using std::cout;
+    using namespace ParkingLotUtils;
 
     ParkingLot::ParkingLot(unsigned int parkingBlockSizes[]) {
         for (int i = VehicleType::FIRST; i <= VehicleType::LAST; ++i) {
@@ -60,5 +61,19 @@ namespace MtmParkingLot {
                 entranceTime));
 
         return SUCCESS;
+    }
+
+    ParkingResult ParkingLot::exitParking(LicensePlate licensePlate,
+        Time exitTime) {
+        if (!AllVehicles.count(licensePlate)) {
+            ParkingLotPrinter::printExitFailure(cout, licensePlate);
+            return ParkingResult::VEHICLE_NOT_FOUND;
+        }
+        const ParkedVehicle& vehicle = AllVehicles.find(licensePlate)->second;
+        cout << vehicle;
+        ParkingLotPrinter::printExitSuccess(cout, vehicle.getParkingSpot(),
+            exitTime, vehicle.getPrice(exitTime));
+        AllVehicles.erase(licensePlate);
+        return ParkingResult::SUCCESS;
     }
 }
