@@ -75,6 +75,10 @@ namespace ParkingLotUtils {
         return total_cost;
     }
 
+    bool operator< (const ParkedVehicle& lhs, const ParkedVehicle& rhs) {
+        return lhs.getParkingSpot() < rhs.getParkingSpot();
+    }
+
     ostream& operator<<(ostream& os, const ParkedVehicle& vehicle) {
         return ParkingLotPrinter::printVehicle(os, vehicle.getVehicleType(),
             vehicle.getLicensePlate(), vehicle.getEntranceTime());
