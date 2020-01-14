@@ -26,8 +26,7 @@ namespace MtmParkingLot {
     ParkingResult ParkingLot::enterParking(VehicleType vehicleType,
         LicensePlate licensePlate, Time entranceTime) {
         if (allVehicles.count(licensePlate)) {
-            const ParkedVehicle& vehicle =
-                allVehicles.find(licensePlate)->second;
+            const ParkedVehicle& vehicle = allVehicles.at(licensePlate);
             cout << vehicle;
             ParkingLotPrinter::printEntryFailureAlreadyParked(cout,
                 vehicle.getParkingSpot());
@@ -74,7 +73,7 @@ namespace MtmParkingLot {
             ParkingLotPrinter::printExitFailure(cout, licensePlate);
             return ParkingResult::VEHICLE_NOT_FOUND;
         }
-        const ParkedVehicle& vehicle = allVehicles.find(licensePlate)->second;
+        const ParkedVehicle& vehicle = allVehicles.at(licensePlate);
         cout << vehicle;
         ParkingLotPrinter::printExitSuccess(cout, vehicle.getParkingSpot(),
             exitTime, vehicle.getPrice(exitTime));
@@ -87,7 +86,7 @@ namespace MtmParkingLot {
         if (!allVehicles.count(licensePlate)) {
             return ParkingResult::VEHICLE_NOT_FOUND;
         }
-        const ParkedVehicle& vehicle = allVehicles.find(licensePlate)->second;
+        const ParkedVehicle& vehicle = allVehicles.at(licensePlate);
         parkingSpot = vehicle.getParkingSpot();
         return ParkingResult::SUCCESS;
     }
