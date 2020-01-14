@@ -1,7 +1,7 @@
 OBJS = MtmParkingLot.o ParkedVehicle.o ParkingLot.o ParkingLotPrinter.o \
  ParkingSpot.o Time.o
 EXEC = MtmParkingLot
-DEBUG_FLAG = -g
+DEBUG_FLAG = -DNDEBUG
 CPPFLAGS = -std=c++11 -Wall -Werror -pedantic-errors $(DEBUG_FLAG)
 
 $(EXEC): $(OBJS)
