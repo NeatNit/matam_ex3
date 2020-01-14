@@ -1,0 +1,8 @@
+parking_lot_tester/
+MtmParkingLot
+MtmParkingLot.o
+ParkedVehicle.o
+ParkingLot.o
+ParkingLotPrinter.o
+ParkingSpot.o
+Time.o
