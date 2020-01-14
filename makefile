@@ -20,5 +20,9 @@ ParkingLotPrinter.o: ParkingLotPrinter.cpp ParkingLotPrinter.h Time.h \
 ParkingSpot.o: ParkingSpot.cpp ParkingSpot.h ParkingLotTypes.h
 Time.o: Time.cpp Time.h
 
+matam_ex3.zip: UniqueArray.h UniqueArrayImp.h ParkingLot.h ParkingLot.cpp \
+ makefile dry.pdf ParkedVehicle.h ParkedVehicle.cpp
+	zip -v $@ $^
+
 clean:
-	rm -f $(EXEC) $(OBJS)
+	rm -f $(EXEC) $(OBJS) matam_ex3.zip
