@@ -23,9 +23,9 @@ namespace MtmParkingLot {
 
     ParkingResult ParkingLot::enterParking(VehicleType vehicleType,
         LicensePlate licensePlate, Time entranceTime) {
-        if (AllVehicles.count(licensePlate)) {
+        if (allVehicles.count(licensePlate)) {
             const ParkedVehicle& vehicle =
-                AllVehicles.find(licensePlate)->second;
+                allVehicles.find(licensePlate)->second;
             cout << vehicle;
             ParkingLotPrinter::printEntryFailureAlreadyParked(cout,
                 vehicle.getParkingSpot());
@@ -55,7 +55,7 @@ namespace MtmParkingLot {
 
         ParkingSpot spot(parking_block_type, parking_number);
 
-        AllVehicles.emplace(std::piecewise_construct,
+        allVehicles.emplace(std::piecewise_construct,
             std::forward_as_tuple(licensePlate),
             std::forward_as_tuple(licensePlate, vehicleType, spot,
                 entranceTime));
@@ -65,24 +65,24 @@ namespace MtmParkingLot {
 
     ParkingResult ParkingLot::exitParking(LicensePlate licensePlate,
         Time exitTime) {
-        if (!AllVehicles.count(licensePlate)) {
+        if (!allVehicles.count(licensePlate)) {
             ParkingLotPrinter::printExitFailure(cout, licensePlate);
             return ParkingResult::VEHICLE_NOT_FOUND;
         }
-        const ParkedVehicle& vehicle = AllVehicles.find(licensePlate)->second;
+        const ParkedVehicle& vehicle = allVehicles.find(licensePlate)->second;
         cout << vehicle;
         ParkingLotPrinter::printExitSuccess(cout, vehicle.getParkingSpot(),
             exitTime, vehicle.getPrice(exitTime));
-        AllVehicles.erase(licensePlate);
+        allVehicles.erase(licensePlate);
         return ParkingResult::SUCCESS;
     }
 
     ParkingResult ParkingLot::getParkingSpot(LicensePlate licensePlate,
         ParkingSpot& parkingSpot) const {
-        if (!AllVehicles.count(licensePlate)) {
+        if (!allVehicles.count(licensePlate)) {
             return ParkingResult::VEHICLE_NOT_FOUND;
         }
-        const ParkedVehicle& vehicle = AllVehicles.find(licensePlate)->second;
+        const ParkedVehicle& vehicle = allVehicles.find(licensePlate)->second;
         parkingSpot = vehicle.getParkingSpot();
         return ParkingResult::SUCCESS;
     }

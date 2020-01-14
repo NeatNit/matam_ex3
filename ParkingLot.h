@@ -15,10 +15,11 @@ namespace MtmParkingLot {
     using std::ostream;
 
     typedef UniqueArray<LicensePlate> ParkingBlock;
+    typedef std::map<LicensePlate, ParkedVehicle> VehicleMap;
 
     class ParkingLot {
         ParkingBlock *parkingBlocks[VehicleType::LAST-VehicleType::FIRST+1];
-        std::map<LicensePlate, ParkedVehicle> AllVehicles;
+        VehicleMap allVehicles;
     public:
 
         ParkingLot(unsigned int parkingBlockSizes[]);
