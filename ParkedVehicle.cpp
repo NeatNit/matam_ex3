@@ -2,6 +2,7 @@
 #include "ParkingLotTypes.h"
 #include "ParkingSpot.h"
 #include "Time.h"
+#include "ParkingLotPrinter.h"
 
 namespace ParkingLotUtils {
     ParkedVehicle::ParkedVehicle(LicensePlate licensePlate, VehicleType vehicleType,
@@ -72,5 +73,10 @@ namespace ParkingLotUtils {
         total_cost += receivedFine ? fine_cost : 0;
 
         return total_cost;
+    }
+
+    ostream& operator<<(ostream& os, const ParkedVehicle& vehicle) {
+        return ParkingLotPrinter::printVehicle(os, vehicle.getVehicleType(),
+            vehicle.getLicensePlate(), vehicle.getEntranceTime());
     }
 }
