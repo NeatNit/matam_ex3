@@ -89,19 +89,20 @@ namespace MtmParkingLot {
 
     ParkingResult ParkingLot::getParkingSpot(LicensePlate licensePlate,
         ParkingSpot& parkingSpot) const {
-        if (!allVehicles.count(licensePlate)) {
+        try {
+            const ParkedVehicle& vehicle = allVehicles.at(licensePlate);
+            parkingSpot = vehicle.getParkingSpot();
+            return ParkingResult::SUCCESS;
+        } catch (std::out_of_range& e) {
             return ParkingResult::VEHICLE_NOT_FOUND;
         }
-        const ParkedVehicle& vehicle = allVehicles.at(licensePlate);
-        parkingSpot = vehicle.getParkingSpot();
-        return ParkingResult::SUCCESS;
     }
 
     ostream& operator<<(ostream& os, const ParkingLot& parkingLot) {
         ParkingLotPrinter::printParkingLotTitle(cout);
         std::set<ParkedVehicle> orderedVehicles;
         // Create a sorted set of all the vehicles
-        // (vehicles sort by ParkingSpot)
+        // (vehicles sort by ParkingSpot automatically)
         for (auto const & pair : parkingLot.allVehicles)
         {
             orderedVehicles.emplace(pair.second);
