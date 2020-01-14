@@ -69,16 +69,22 @@ namespace MtmParkingLot {
 
     ParkingResult ParkingLot::exitParking(LicensePlate licensePlate,
         Time exitTime) {
-        if (!allVehicles.count(licensePlate)) {
+        try {
+            const ParkedVehicle& vehicle = allVehicles.at(licensePlate);
+            ParkingSpot spot = vehicle.getParkingSpot();
+            ParkingBlock *parking_block = parkingBlocks[spot.getParkingBlock()];
+            parking_block->remove(licensePlate);
+
+            cout << vehicle;
+            ParkingLotPrinter::printExitSuccess(cout, spot,
+                exitTime, vehicle.getPrice(exitTime));
+
+            allVehicles.erase(licensePlate);
+            return ParkingResult::SUCCESS;
+        } catch (std::out_of_range& e) {
             ParkingLotPrinter::printExitFailure(cout, licensePlate);
             return ParkingResult::VEHICLE_NOT_FOUND;
         }
-        const ParkedVehicle& vehicle = allVehicles.at(licensePlate);
-        cout << vehicle;
-        ParkingLotPrinter::printExitSuccess(cout, vehicle.getParkingSpot(),
-            exitTime, vehicle.getPrice(exitTime));
-        allVehicles.erase(licensePlate);
-        return ParkingResult::SUCCESS;
     }
 
     ParkingResult ParkingLot::getParkingSpot(LicensePlate licensePlate,
