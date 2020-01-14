@@ -1,5 +1,6 @@
 #include <iostream>
 #include <set>
+#include <assert.h>
 
 #include "ParkingLot.h"
 #include "ParkingLotTypes.h"
@@ -104,5 +105,32 @@ namespace MtmParkingLot {
             ParkingLotPrinter::printParkingSpot(cout, vehicle.getParkingSpot());
         }
         return cout;
+    }
+
+    void ParkingLot::inspectParkingLot(Time inspectionTime) {
+        unsigned int fine_count = 0;
+        Time::Hour limit = 24;
+
+        for(auto & pair : allVehicles) {
+            ParkedVehicle& vehicle = pair.second;
+            if (!vehicle.getHasReceivedFine()
+                && (inspectionTime - vehicle.getEntranceTime())
+                    .toHours() > limit) {
+                vehicle.giveFine(true);
+                ++fine_count;
+            }
+        }
+
+#ifndef NDEBUG
+        // make sure that it actually modified the stored vehicles
+        unsigned int total_fines;
+        for(auto & pair : allVehicles) {
+            ParkedVehicle& vehicle = pair.second;
+            if (vehicle.getHasReceivedFine()){
+                ++total_fines;
+            }
+        }
+        assert(total_fines >= fine_count);
+#endif
     }
 }
