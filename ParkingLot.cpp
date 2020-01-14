@@ -1,4 +1,5 @@
 #include <iostream>
+#include <set>
 
 #include "ParkingLot.h"
 #include "ParkingLotTypes.h"
@@ -85,5 +86,23 @@ namespace MtmParkingLot {
         const ParkedVehicle& vehicle = allVehicles.find(licensePlate)->second;
         parkingSpot = vehicle.getParkingSpot();
         return ParkingResult::SUCCESS;
+    }
+
+    ostream& operator<<(ostream& os, const ParkingLot& parkingLot) {
+        ParkingLotPrinter::printParkingLotTitle(cout);
+        std::set<ParkedVehicle> orderedVehicles;
+        // Create a sorted set of all the vehicles
+        // (vehicles sort by ParkingSpot)
+        for (auto const & pair : parkingLot.allVehicles)
+        {
+            orderedVehicles.emplace(pair.second);
+        }
+        // Now print them all
+        for (ParkedVehicle const & vehicle : orderedVehicles)
+        {
+            cout << vehicle;
+            ParkingLotPrinter::printParkingSpot(cout, vehicle.getParkingSpot());
+        }
+        return cout;
     }
 }

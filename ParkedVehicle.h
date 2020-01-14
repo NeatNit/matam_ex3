@@ -25,6 +25,9 @@ namespace ParkingLotUtils {
         void giveFine(bool fine);
         friend ostream& operator<<(ostream& os, const ParkedVehicle& vehicle);
     };
+
+    // comparison between two vehicles will compare their ParkingSpots
+    bool operator< (const ParkedVehicle& lhs, const ParkedVehicle& rhs);
 }
 
 #endif //MTMPARKINGLOT_PARKEDVEHICLE_H
