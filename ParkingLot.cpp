@@ -33,14 +33,13 @@ int numberOfSpots(unsigned int* parkingBlockSizes){
 }
 
 ParkingLot::ParkingLot(unsigned int *parkingBlockSizes):
-motorbikes(new UniqueArray<LicensePlate>(parkingBlockSizes[MOTORBIKE])),
-handicaps(new UniqueArray<LicensePlate>(parkingBlockSizes[HANDICAPPED])),
-cars(new UniqueArray<LicensePlate>(parkingBlockSizes[CAR])),
-plates_to_vehicles(new map<LicensePlate, Vehicle>),
-spots_to_vehicles(new map<int, Vehicle>){
+motorbikes(UniqueArray<LicensePlate>(parkingBlockSizes[MOTORBIKE])),
+handicaps(UniqueArray<LicensePlate>(parkingBlockSizes[HANDICAPPED])),
+cars(UniqueArray<LicensePlate>(parkingBlockSizes[CAR])),
+plates_to_vehicles(map<LicensePlate, Vehicle>),
+spots_to_vehicles(map<int, Vehicle>){
     size = numberOfSpots(parkingBlockSizes);
 }
-
 ParkingLot::~ParkingLot() {
     delete motorbikes;
     delete handicaps;
@@ -129,7 +128,6 @@ UniqueArray<LicensePlate> & ParkingLot::uniqueArrayByType(ParkingLotUtils::Vehic
 ParkingSpot ParkingLot::findSpot(ParkingLotUtils::VehicleType type, int index) {
     int factor = int(type);
     factor *= size;
-    ParkingSpot spot = new ParkingSpot(type, index+factor);
+    ParkingSpot spot(type, index+factor);
     return spot;
-
 }

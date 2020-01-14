@@ -44,11 +44,6 @@ namespace MtmParkingLot {
         ParkingResult getParkingSpot(LicensePlate licensePlate, ParkingSpot& parkingSpot) const;
         void inspectParkingLot(Time inspectionTime);
         friend ostream& operator<<(ostream& os, const ParkingLot& parkingLot);
-
-
-        //bool vehicleIsIn(LicensePlate plate) const;
-        //Vehicle& getVehicleByPlates(LicensePlate license_plate) const;
-
     };
 }
 

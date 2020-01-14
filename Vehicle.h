@@ -20,7 +20,6 @@ namespace Vehicles{
         void giveTicket();
     public:
         Vehicle(Time arrival_time, VehicleType type, LicensePlate plate, const ParkingSpot spot);
-        Vehicle();
         void addDebt(const Time departure_time);
         LicensePlate getPlates() const;
         ParkingSpot& getSpot() const;
